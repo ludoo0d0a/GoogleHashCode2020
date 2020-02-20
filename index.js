@@ -1,7 +1,11 @@
 import * as cTable from 'console.table'
 import * as io from './io.js'
 import * as score from './score.js'
+import * as utils from './utils.js'
 
+function rnd(){
+    return Math.random()<0.5;
+}
 var run = function(name) {
     var lines = io.readFile(name+'.txt');
 
@@ -11,6 +15,13 @@ var run = function(name) {
     for (let l = 0; l < libraries; l++) {
         const l1 = lines[2+l*2].split(' ').map(Number);
         const l2 = lines[3+l*2].split(' ').map(Number);
+
+        // books / high score first
+        const _l2 = l2.slice(0)
+        l2.sort((a,b) => scores[b]-scores[a]);
+        // utils.shuffle(l2);
+        // l2.sort((b,a) => scores[b]-scores[a]);
+
         const lib = {
             id : l,
             // n books per library
@@ -29,7 +40,10 @@ var run = function(name) {
     // console.log(JSON.stringify(libs));
 
     let orderedLibs = libs;
-    // TODO
+
+    libs.sort((a,b) => a.signup-b.signup);
+    // utils.shuffle(libs);
+    // libs.sort((b,a) => a.signup-b.signup);
 
     const r = score.sumScore(orderedLibs, scores, maxdays);
 
@@ -40,7 +54,7 @@ var run = function(name) {
     return r.score;
 };
 
-// run('a_example');
+const test_one = false;
 
 function runAll(){
     let score = 0;
@@ -51,5 +65,20 @@ function runAll(){
     score += run('e_so_many_books');   
     score += run('f_libraries_of_the_world');   
     console.log('Score total : %d', score);
+    return score;
 }
-runAll();
+
+if (test_one){
+    // run('a_example');
+    // run('b_read_on');
+    run('c_incunabula');
+}else{
+    runAll();
+
+    // for (let index = 0; index < 10; index++) {
+    //     const score = runAll();
+    //     if (score > 21000000){
+    //         break;
+    //     }
+    // }
+}
