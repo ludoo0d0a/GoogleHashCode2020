@@ -6,6 +6,9 @@ import * as utils from './utils.js'
 function rnd(){
     return Math.random()<0.5;
 }
+function sum1(a){
+    return a.ships_day * a.max_score / a.signup
+}
 var run = function(name) {
     var lines = io.readFile(name+'.txt');
 
@@ -44,12 +47,14 @@ var run = function(name) {
     }
 
     libs.sort((a,b) => {
-        let s = a.signup-b.signup;
-        if (s===0){
-            // s = b.ships_day - a.ships_day;
-            s = b.max_score-a.max_score;
-        }
-        return s;
+        return sum1(b) - sum1(a);
+
+        // let s = a.signup-b.signup;
+        // if (s===0){
+        //     // s = b.ships_day - a.ships_day;
+        //     s = b.max_score-a.max_score;
+        // }
+        // return s;
     });
     // utils.shuffle(libs);
     // libs.sort((b,a) => a.signup-b.signup);
