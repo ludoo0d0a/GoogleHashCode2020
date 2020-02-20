@@ -1,0 +1,24 @@
+{
+  "name": "google-hash-code-2020",
+  "version": "1.0.0",
+  "description": "",
+  "main": "day1.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ludoo0d0a/GoogleHashCode2020.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ludoo0d0a/GoogleHashCode2020/issues"
+  },
+  "homepage": "https://github.com/ludoo0d0a/GoogleHashCode2020#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "mathjs": "^6.6.0"
+  }
+}
