@@ -8,7 +8,7 @@ function rnd(){
 }
 function sum1(a){
     // return a.ships_day * a.max_score / a.signup 
-    return a.ships_day * a.max_score / Math.pow(a.signup, 2)
+    return a.nbooks * a.ships_day * a.max_score / Math.pow(a.signup, 2)
 }
 var run = function(name) {
     var lines = io.readFile(name+'.txt');
