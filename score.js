@@ -38,15 +38,24 @@ export function sumScore(libs, scores, maxdays){
         }
     }
 
-    let score = 0;  
-    Object.keys(sumbooks).map(idbook => {
-        score+=scores[Number(idbook)]
-    })
+    // let score = 0;  
+    // Object.keys(sumbooks).map(idbook => {
+    //     score+=scores[Number(idbook)]
+    // })
 
+    let score = computeScore(Object.keys(sumbooks), scores);
     return {
         libs_signed,
         score
     };
+}
+
+export function computeScore(idbooks, scores){
+    let score = 0;  
+    idbooks.map(idbook => {
+        score+=scores[Number(idbook)]
+    })
+    return score;
 }
 
 export function saveOutput(libs_signed){

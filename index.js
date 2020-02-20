@@ -35,13 +35,19 @@ var run = function(name) {
             books_sent: [],
             books : l2
         }
+
+        // in maxdays, with ships per day, score in range for this lib :
+        const n_first_books = lib.books.slice(0,maxdays * lib.ships_day)
+        lib.max_score = score.computeScore(n_first_books, scores);
+
         libs.push(lib)
     }
 
     libs.sort((a,b) => {
         let s = a.signup-b.signup;
         if (s===0){
-            s = b.ships_day - a.ships_day;
+            // s = b.ships_day - a.ships_day;
+            s = b.max_score-a.max_score;
         }
         return s;
     });
