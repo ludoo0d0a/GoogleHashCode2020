@@ -17,7 +17,7 @@ var run = function(name) {
         const l2 = lines[3+l*2].split(' ').map(Number);
 
         // books / high score first
-        const _l2 = l2.slice(0)
+        // const _l2 = l2.slice(0)
         l2.sort((a,b) => scores[b]-scores[a]);
         // utils.shuffle(l2);
         // l2.sort((b,a) => scores[b]-scores[a]);
@@ -37,15 +37,18 @@ var run = function(name) {
         }
         libs.push(lib)
     }
-    // console.log(JSON.stringify(libs));
 
-    let orderedLibs = libs;
-
-    libs.sort((a,b) => a.signup-b.signup);
+    libs.sort((a,b) => {
+        let s = a.signup-b.signup;
+        if (s===0){
+            s = b.ships_day - a.ships_day;
+        }
+        return s;
+    });
     // utils.shuffle(libs);
     // libs.sort((b,a) => a.signup-b.signup);
 
-    const r = score.sumScore(orderedLibs, scores, maxdays);
+    const r = score.sumScore(libs, scores, maxdays);
 
     const rlines = score.saveOutput(r.libs_signed);
     io.saveFile(name+'.out', rlines);
