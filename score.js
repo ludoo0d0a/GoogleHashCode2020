@@ -11,12 +11,10 @@ export function computeMaxScore(lib, scores, maxdays){
 export function sumScore(libs, scores, maxdays){
     
     let days = Array(maxdays).fill(0);
-    // let curlib = 0; //lib in signup
     let lib_in_signup = libs.shift();
     let libs_signed = [];
     let sumbooks = {}; // id des books a compté / eviter duplicates
     for (let d = 0; d < maxdays; d++) {
-        // let lib_in_signup = libs[curlib];
         if (lib_in_signup){
             // No more library to signup
             --lib_in_signup.signup;
@@ -44,7 +42,6 @@ export function sumScore(libs, scores, maxdays){
        if (lib_in_signup && lib_in_signup.signup==0){
             libs_signed.push(lib_in_signup);
             // Go next lib, next tick
-            // ++curlib;
             if (libs.length>0){
                 lib_in_signup = libs.shift();
             }else{
