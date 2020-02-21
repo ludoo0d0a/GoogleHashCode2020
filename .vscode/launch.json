@@ -7,12 +7,29 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "index",
+            "name": "index debug",
+            "env": {
+                "NODE_ENV": "development"
+            },
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/index.js"
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "index prod",
+             "env": {
+                "NODE_ENV": "production"
+            },
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/index.js"
+        },
+
+        
         {
             "type": "node",
             "request": "launch",

@@ -12,9 +12,9 @@ const DEFAULT_OPTS = {
         ships_day:1,
         signup:2
     }
-var runDefault = function(name) {
+var runLast = function(name) {
     let opts = DEFAULT_OPTS;
-    opts = io.readJson('options/'+name+'.json')
+    // opts = io.readJson('options/'+name+'.json')
     if (!opts){ opts = DEFAULT_OPTS }
     const score = runOpts(name, opts);
     console.log('%s : score=%d', name, score);
@@ -31,21 +31,22 @@ var runHack = function(name) {
     let max_score = 0;
     for (let i = START; i < END; i+=STEP) {
         opts.max_score=i
-        io.loga('i='+i)
+        io.log('i='+i)
         for (let j = START; j < END; j+=STEP) {
             opts.nbooks=j
-            io.log(name+'  j='+j)
+            io.log(name+'i='+i+' j='+j)
             for (let k = START; k < END; k+=STEP) {
                 opts.ships_day=k
-                io.log(name+'   k='+k)
+                io.log(name+'i='+i+' j='+j+' k='+k)
                 for (let l = START; l < END; l+=STEP) {
                     opts.signup=l
-                    io.log(name+'    l='+l)
+                    // io.log(name+'    l='+l)
                     let score = runOpts(name, opts)
                     if (score>max_score){
                         //save opts + score
                         max_opts = Object.assign({}, opts);
                         max_score = score;
+                        max_opts._score=max_score;
                         console.log('New max score : '+score)
                         console.log('    opts : '+JSON.stringify(max_opts))
                     }
@@ -59,7 +60,6 @@ var runHack = function(name) {
 
     console.log(' ==== '+name);
     console.log('Final Max score : '+max_score)
-    max_opts.max_score=max_score;
     console.log('opts : '+JSON.stringify(max_opts))
     io.saveAsjson('options/'+name+'.json', max_opts)
     return max_score;    
@@ -121,26 +121,28 @@ var runOpts = function(name, opts) {
     return r.score;
 };
 
-const test_one = false;
-const run = runHack; // Use brute force
-// const run = runDefault;
+const test_one = true; // one single run
+const try_hack = true; // hack brute force ?
+
+const run = try_hack ? runHack : runLast; // Use brute force
 
 function runAll(){
     let score = 0;
-    // score += run('a_example');
-    // score += run('b_read_on');   
-    // score += run('c_incunabula');    // 5336951
-    // score += run('d_tough_choices');   
-    score += run('e_so_many_books');   
-    score += run('f_libraries_of_the_world');   
+    score += run('a_example');   // 21
+    score += run('b_read_on');   // 5822900
+    score += run('c_incunabula');    // 5645747
+    // score += run('d_tough_choices');   // 
+    // score += run('e_so_many_books');   // 4180700
+    // score += run('f_libraries_of_the_world');   // 5288138
     console.log('Score total : %d', score);
     return score;
 }
 
 if (test_one){
-    // run('a_example');
-    // run('b_read_on');
-    run('c_incunabula'); // 5336951
+    // run('a_example'); 
+    // run('b_read_on'); 
+    // run('c_incunabula');
+    run('d_tough_choices'); 
 }else{
     runAll();
 
