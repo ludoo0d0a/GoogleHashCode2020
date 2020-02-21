@@ -3,28 +3,87 @@ import * as io from './io.js'
 import * as score from './score.js'
 import * as utils from './utils.js'
 
-function rnd(){
-    return Math.random()<0.5;
-}
-
-function diffsum1(a,b){
-    return sum1(b) - sum1(a)
-}
-function sum1(a){
-    // return a.ships_day * a.max_score / a.signup 
-    return a.max_score * a.nbooks * a.ships_day / Math.pow(a.signup, 2)
-}
-function diffsum2(a,b){
-    let s = a.signup-b.signup;
-    if (s===0){
-        // s = b.ships_day - a.ships_day;
-        s = b.max_score-a.max_score;
+const STEP = 0.5;
+const START = -2; // -2;
+const END = 2; // 2;
+const DEFAULT_OPTS = {
+        max_score:1,
+        nbooks:1,
+        ships_day:1,
+        signup:2
     }
-    return s;
+var runDefault = function(name) {
+    let opts = DEFAULT_OPTS;
+    opts = io.readJson('options/'+name+'.json')
+    if (!opts){ opts = DEFAULT_OPTS }
+    const score = runOpts(name, opts);
+    console.log('%s : score=%d', name, score);
+    return score;
 }
-const diffsum=diffsum1;
+var runHack = function(name) {
+    let opts = {
+        max_score:-2,
+        nbooks:-2,
+        ships_day:-2,
+        signup:-2
+    }
+    let max_opts;
+    let max_score = 0;
+    for (let i = START; i < END; i+=STEP) {
+        opts.max_score=i
+        io.loga('i='+i)
+        for (let j = START; j < END; j+=STEP) {
+            opts.nbooks=j
+            io.log(name+'  j='+j)
+            for (let k = START; k < END; k+=STEP) {
+                opts.ships_day=k
+                io.log(name+'   k='+k)
+                for (let l = START; l < END; l+=STEP) {
+                    opts.signup=l
+                    io.log(name+'    l='+l)
+                    let score = runOpts(name, opts)
+                    if (score>max_score){
+                        //save opts + score
+                        max_opts = Object.assign({}, opts);
+                        max_score = score;
+                        console.log('New max score : '+score)
+                        console.log('    opts : '+JSON.stringify(max_opts))
+                    }
+                }
+            }
+        }
+    }
 
-var run = function(name) {
+    // re-run to get files
+    let _score = runOpts(name, max_opts)
+
+    console.log(' ==== '+name);
+    console.log('Final Max score : '+max_score)
+    max_opts.max_score=max_score;
+    console.log('opts : '+JSON.stringify(max_opts))
+    io.saveAsjson('options/'+name+'.json', max_opts)
+    return max_score;    
+}
+
+var runOpts = function(name, opts) {
+    function diffsum1(a,b){
+        return sum1(b) - sum1(a)
+    }
+    function sum1(a){
+        // return a.ships_day * a.max_score / a.signup 
+        // return a.max_score * a.nbooks * a.ships_day / Math.pow(a.signup, 2)
+        return Math.pow(a.max_score, opts.max_score) * Math.pow(a.nbooks, opts.nbooks) * Math.pow(a.ships_day, opts.ships_day) * Math.pow(a.signup, opts.signup)
+    }
+    function diffsum2(a,b){
+        let s = a.signup-b.signup;
+        if (s===0){
+            // s = b.ships_day - a.ships_day;
+            s = b.max_score-a.max_score;
+        }
+        return s;
+    }
+    const diffsum=diffsum1;
+
     var lines = io.readFile(name+'.txt');
 
     const [nbooks, libraries, maxdays] = lines[0].split(' ').map(Number);
@@ -58,18 +117,20 @@ var run = function(name) {
     const rlines = score.saveOutput(r.libs_signed);
     io.saveFile(name+'.out', rlines);
 
-    console.log('%s : score=%d', name, r.score);
+    // console.log('%s : score=%d', name, r.score);
     return r.score;
 };
 
 const test_one = false;
+const run = runHack; // Use brute force
+// const run = runDefault;
 
 function runAll(){
     let score = 0;
-    score += run('a_example');
-    score += run('b_read_on');   
-    score += run('c_incunabula');   
-    score += run('d_tough_choices');   
+    // score += run('a_example');
+    // score += run('b_read_on');   
+    // score += run('c_incunabula');    // 5336951
+    // score += run('d_tough_choices');   
     score += run('e_so_many_books');   
     score += run('f_libraries_of_the_world');   
     console.log('Score total : %d', score);
@@ -79,7 +140,7 @@ function runAll(){
 if (test_one){
     // run('a_example');
     // run('b_read_on');
-    run('c_incunabula');
+    run('c_incunabula'); // 5336951
 }else{
     runAll();
 

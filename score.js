@@ -5,7 +5,6 @@ export function computeMaxScores(libs, scores, maxdays){
 }
 export function computeMaxScore(lib, scores, maxdays){
     const n_first_books = lib.books.slice(0, (maxdays - lib.ships_day) * lib.ships_day)
-    // const n_first_books = lib.books.slice(0, maxdays * lib.ships_day)
     lib.max_score = computeScore(n_first_books, scores);
 }
 export function sumScore(libs, scores, maxdays){
@@ -44,17 +43,14 @@ export function sumScore(libs, scores, maxdays){
             // Go next lib, next tick
             if (libs.length>0){
                 lib_in_signup = libs.shift();
+                // no effect...
+                // computeMaxScores(libs, scores, maxdays)
             }else{
                 lib_in_signup = null;
             }
 
         }
     }
-
-    // let score = 0;  
-    // Object.keys(sumbooks).map(idbook => {
-    //     score+=scores[Number(idbook)]
-    // })
 
     let score = computeScore(Object.keys(sumbooks), scores);
     return {

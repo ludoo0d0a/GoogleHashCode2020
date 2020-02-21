@@ -1,4 +1,24 @@
 import fs from 'fs';
+import { loadavg } from 'os';
+
+export function loga(m){
+    process.stdout.write(m);
+}
+export function log(m){
+    console.log(m);
+}
+export function saveAsjson(name, o){
+    fs.writeFileSync('out/'+name, JSON.stringify(o))
+}
+export function readJson(name){
+    const path = 'out/'+name;
+    let o = null;
+    if (fs.existsSync(path)){
+        var content = fs.readFileSync(path, 'utf8');
+        o = JSON.parse(content);
+    }
+    return o;
+}
 
 export function saveFile(name, out){
     // let out = [];
