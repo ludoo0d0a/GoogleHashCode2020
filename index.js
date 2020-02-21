@@ -6,10 +6,24 @@ import * as utils from './utils.js'
 function rnd(){
     return Math.random()<0.5;
 }
+
+function diffsum1(a,b){
+    return sum1(b) - sum1(a)
+}
 function sum1(a){
     // return a.ships_day * a.max_score / a.signup 
-    return a.nbooks * a.ships_day * a.max_score / Math.pow(a.signup, 2)
+    return a.max_score * a.nbooks * a.ships_day / Math.pow(a.signup, 2)
 }
+function diffsum2(a,b){
+    let s = a.signup-b.signup;
+    if (s===0){
+        // s = b.ships_day - a.ships_day;
+        s = b.max_score-a.max_score;
+    }
+    return s;
+}
+const diffsum=diffsum1;
+
 var run = function(name) {
     var lines = io.readFile(name+'.txt');
 
@@ -19,13 +33,8 @@ var run = function(name) {
     for (let l = 0; l < libraries; l++) {
         const l1 = lines[2+l*2].split(' ').map(Number);
         const l2 = lines[3+l*2].split(' ').map(Number);
-
         // books / high score first
-        // const _l2 = l2.slice(0)
         l2.sort((a,b) => scores[b]-scores[a]);
-        // utils.shuffle(l2);
-        // l2.sort((b,a) => scores[b]-scores[a]);
-
         const lib = {
             id : l,
             // n books per library
@@ -39,29 +48,13 @@ var run = function(name) {
             books_sent: [],
             books : l2
         }
-
         // in maxdays, with ships per day, score in range for this lib :
-        const n_first_books = lib.books.slice(0,maxdays * lib.ships_day)
-        lib.max_score = score.computeScore(n_first_books, scores);
-
+        score.computeMaxScore(lib, scores, maxdays);
         libs.push(lib)
     }
 
-    libs.sort((a,b) => {
-        return sum1(b) - sum1(a);
-
-        // let s = a.signup-b.signup;
-        // if (s===0){
-        //     // s = b.ships_day - a.ships_day;
-        //     s = b.max_score-a.max_score;
-        // }
-        // return s;
-    });
-    // utils.shuffle(libs);
-    // libs.sort((b,a) => a.signup-b.signup);
-
+    libs.sort(diffsum);
     const r = score.sumScore(libs, scores, maxdays);
-
     const rlines = score.saveOutput(r.libs_signed);
     io.saveFile(name+'.out', rlines);
 
