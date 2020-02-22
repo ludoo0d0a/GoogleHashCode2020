@@ -134,12 +134,12 @@ const run = try_hack ? runHack : runLast; // Use brute force
 
 function runAll(){
     let score = 0;
-    score += run('a_example');   // 21
-    score += run('b_read_on');   // 5822900
-    score += run('c_incunabula');    // 5645747
-    score += run('d_tough_choices');   // 4815395 
-    score += run('e_so_many_books');   // 4180700
-    score += run('f_libraries_of_the_world');   // 5288138
+    score += run('a_example');   // {"max_score":-2,"nbooks":-2,"ships_day":-2,"signup":-2,"_score":21}
+    score += run('b_read_on');   // {"max_score":-2,"nbooks":-2,"ships_day":-2,"signup":-2,"_score":5822900}
+    score += run('c_incunabula');    // {"max_score":0.5,"nbooks":0,"ships_day":0,"signup":-0.5,"_score":5645747}
+    score += run('d_tough_choices');   // {"max_score":-1,"nbooks":1.5,"ships_day":-2,"signup":-2,"_score":4815395} 
+    score += run('e_so_many_books');   // {"max_score":0.5,"nbooks":0,"ships_day":0,"signup":-1,"_score":4180700}  -> counted : 4,104,800 !!
+    score += run('f_libraries_of_the_world');   // {"max_score":0,"nbooks":0.5,"ships_day":0,"signup":-0.5,"_score":5288138}
     console.log('Score total : %d', score);
     return score;
 }
@@ -148,7 +148,8 @@ if (test_one){
     // run('a_example'); 
     // run('b_read_on'); 
     // run('c_incunabula');
-    run('d_tough_choices'); 
+    // run('d_tough_choices'); 
+    run('e_so_many_books'); 
 }else{
     runAll();
 

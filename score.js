@@ -70,10 +70,15 @@ export function computeScore(idbooks, scores){
 
 export function saveOutput(libs_signed){
     let lines = [];
+    // filter lib empty
+    libs_signed=libs_signed.filter(lib => lib.books_sent.length>0);
+
     lines.push(libs_signed.length);
     libs_signed.forEach(lib => {
-        lines.push(lib.id+' '+lib.books_sent.length);
-        lines.push(lib.books_sent.join(' '));
+        if (lib.books_sent.length>0){
+            lines.push(lib.id+' '+lib.books_sent.length);
+            lines.push(lib.books_sent.join(' '));
+        }
     })
     return lines;
 }
