@@ -131,9 +131,9 @@ function runAll(){
     score += run('a_example');   // 21
     score += run('b_read_on');   // 5822900
     score += run('c_incunabula');    // 5645747
-    // score += run('d_tough_choices');   // 
-    // score += run('e_so_many_books');   // 4180700
-    // score += run('f_libraries_of_the_world');   // 5288138
+    score += run('d_tough_choices');   // 4815395 
+    score += run('e_so_many_books');   // 4180700
+    score += run('f_libraries_of_the_world');   // 5288138
     console.log('Score total : %d', score);
     return score;
 }
