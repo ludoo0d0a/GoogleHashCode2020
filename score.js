@@ -1,13 +1,13 @@
-export function computeMaxScores(libs, scores, maxdays){
+export function computeMaxScores(libs, scores, maxdays, day){
     libs.forEach(lib => {
-        computeMaxScore(lib);
+        computeMaxScore(lib, scores, maxdays, day);
     })
 }
-export function computeMaxScore(lib, scores, maxdays){
-    const n_first_books = lib.books.slice(0, (maxdays - lib.ships_day) * lib.ships_day)
+export function computeMaxScore(lib, scores, maxdays, day){
+    const n_first_books = lib.books.slice(0, (maxdays - lib.ships_day - day) * lib.ships_day)
     lib.max_score = computeScore(n_first_books, scores);
 }
-export function sumScore(libs, scores, maxdays){
+export function sumScore(libs, scores, maxdays, diffsum){
     
     let days = Array(maxdays).fill(0);
     let lib_in_signup = libs.shift();
@@ -42,9 +42,10 @@ export function sumScore(libs, scores, maxdays){
             libs_signed.push(lib_in_signup);
             // Go next lib, next tick
             if (libs.length>0){
+                // recompute score + sort for available slots
+                // computeMaxScores(libs, scores, maxdays, d)
+                // libs.sort(diffsum);
                 lib_in_signup = libs.shift();
-                // no effect...
-                // computeMaxScores(libs, scores, maxdays)
             }else{
                 lib_in_signup = null;
             }

@@ -14,8 +14,14 @@ const DEFAULT_OPTS = {
     }
 var runLast = function(name) {
     let opts = DEFAULT_OPTS;
-    // opts = io.readJson('options/'+name+'.json')
-    if (!opts){ opts = DEFAULT_OPTS }
+    const path = 'options/'+name+'.json';
+    opts = io.readJson(path)
+    if (!opts){ 
+        console.log('Whoops no config file for '+name+ ' : '+path);
+        opts = DEFAULT_OPTS
+    }else{
+        console.log('load config [%s] %s', name, JSON.stringify(opts))
+    }
     const score = runOpts(name, opts);
     console.log('%s : score=%d', name, score);
     return score;
@@ -108,12 +114,12 @@ var runOpts = function(name, opts) {
             books : l2
         }
         // in maxdays, with ships per day, score in range for this lib :
-        score.computeMaxScore(lib, scores, maxdays);
+        score.computeMaxScore(lib, scores, maxdays, 0);
         libs.push(lib)
     }
 
     libs.sort(diffsum);
-    const r = score.sumScore(libs, scores, maxdays);
+    const r = score.sumScore(libs, scores, maxdays, diffsum);
     const rlines = score.saveOutput(r.libs_signed);
     io.saveFile(name+'.out', rlines);
 
@@ -121,8 +127,8 @@ var runOpts = function(name, opts) {
     return r.score;
 };
 
-const test_one = true; // one single run
-const try_hack = true; // hack brute force ?
+const test_one = false; // one single run
+const try_hack = false; // hack brute force ?
 
 const run = try_hack ? runHack : runLast; // Use brute force
 
