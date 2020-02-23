@@ -19,7 +19,8 @@ export function computeMaxScore(lib, scores, maxdays, day, sumbooks){
 export function computeScore(idbooks, scores){
     let score = 0;  
     idbooks.map(idbook => {
-        score+=scores[Number(idbook)]
+        score+=scores[idbook]
+        // score+=scores[Number(idbook)]
     })
     return score;
 }
@@ -67,13 +68,16 @@ export function sumScore(libs, scores, maxdays, diffsum){
         }
     }
 
-    let score = computeScore(Object.keys(sumbooks), scores);
+    let score = computeScore(getIds(sumbooks), scores);
     return {
         libs_signed,
         score
     };
 }
 
+function getIds(books){
+    return Object.keys(books).map(Number);
+}
 
 export function saveOutput(libs_signed){
     let lines = [];
