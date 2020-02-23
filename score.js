@@ -1,15 +1,29 @@
-export function computeMaxScores(libs, scores, maxdays, day){
+export function computeMaxScores(libs, scores, maxdays, day, sumbooks){
     libs.forEach(lib => {
-        computeMaxScore(lib, scores, maxdays, day);
+        computeMaxScore(lib, scores, maxdays, day, sumbooks);
     })
 }
-export function computeMaxScore(lib, scores, maxdays, day){
-    const n_first_books = lib.books.slice(0, (maxdays - lib.ships_day - day) * lib.ships_day)
-    lib.max_score = computeScore(n_first_books, scores);
+export function sortBooks(books, scores, sumbooks){
+    books.sort((a,b) => {
+        // Books already counted are moved at the end
+        if (sumbooks[a]) return -1
+        if (sumbooks[b]) return 1
+        return scores[b]-scores[a]
+    });
+}
+export function computeMaxScore(lib, scores, maxdays, day, sumbooks){
+    sortBooks(lib.books, scores, sumbooks)
+    const next_books = lib.books.slice(0, (maxdays - lib.signup - day) * lib.ships_day)
+    lib.max_score = computeScore(next_books, scores);
+}
+export function computeScore(idbooks, scores){
+    let score = 0;  
+    idbooks.map(idbook => {
+        score+=scores[Number(idbook)]
+    })
+    return score;
 }
 export function sumScore(libs, scores, maxdays, diffsum){
-    
-    let days = Array(maxdays).fill(0);
     let lib_in_signup = libs.shift();
     let libs_signed = [];
     let sumbooks = {}; // id des books a compté / eviter duplicates
@@ -43,7 +57,7 @@ export function sumScore(libs, scores, maxdays, diffsum){
             // Go next lib, next tick
             if (libs.length>0){
                 // recompute score + sort for available slots
-                // computeMaxScores(libs, scores, maxdays, d)
+                // computeMaxScores(libs, scores, maxdays, d, sumbooks)
                 // libs.sort(diffsum);
                 lib_in_signup = libs.shift();
             }else{
@@ -60,13 +74,6 @@ export function sumScore(libs, scores, maxdays, diffsum){
     };
 }
 
-export function computeScore(idbooks, scores){
-    let score = 0;  
-    idbooks.map(idbook => {
-        score+=scores[Number(idbook)]
-    })
-    return score;
-}
 
 export function saveOutput(libs_signed){
     let lines = [];

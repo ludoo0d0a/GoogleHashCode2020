@@ -75,10 +75,10 @@ var runOpts = function(name, opts) {
     function diffsum1(a,b){
         return sum1(b) - sum1(a)
     }
-    function sum1(a){
+    function sum1(lib){
         // return a.ships_day * a.max_score / a.signup 
         // return a.max_score * a.nbooks * a.ships_day / Math.pow(a.signup, 2)
-        return Math.pow(a.max_score, opts.max_score) * Math.pow(a.nbooks, opts.nbooks) * Math.pow(a.ships_day, opts.ships_day) * Math.pow(a.signup, opts.signup)
+        return Math.pow(lib.max_score, opts.max_score) * Math.pow(lib.nbooks, opts.nbooks) * Math.pow(lib.ships_day, opts.ships_day) * Math.pow(lib.signup, opts.signup)
     }
     function diffsum2(a,b){
         let s = a.signup-b.signup;
@@ -94,12 +94,14 @@ var runOpts = function(name, opts) {
 
     const [nbooks, libraries, maxdays] = lines[0].split(' ').map(Number);
     const libs = [];
+    const sumbooks = {};
     const scores = lines[1].split(' ').map(Number);
     for (let l = 0; l < libraries; l++) {
         const l1 = lines[2+l*2].split(' ').map(Number);
-        const l2 = lines[3+l*2].split(' ').map(Number);
+        const books = lines[3+l*2].split(' ').map(Number);
         // books / high score first
-        l2.sort((a,b) => scores[b]-scores[a]);
+        // books.sort((a,b) => scores[b]-scores[a]);
+        score.sortBooks(books, scores, sumbooks);
         const lib = {
             id : l,
             // n books per library
@@ -111,10 +113,10 @@ var runOpts = function(name, opts) {
             ships_day : l1[2],
             progress: 0,
             books_sent: [],
-            books : l2
+            books : books
         }
         // in maxdays, with ships per day, score in range for this lib :
-        score.computeMaxScore(lib, scores, maxdays, 0);
+        score.computeMaxScore(lib, scores, maxdays, 0, sumbooks);
         libs.push(lib)
     }
 
@@ -138,9 +140,9 @@ function runAll(){
     score += run('b_read_on');   // {"max_score":-2,"nbooks":-2,"ships_day":-2,"signup":-2,"_score":5822900}
     score += run('c_incunabula');    // {"max_score":0.5,"nbooks":0,"ships_day":0,"signup":-0.5,"_score":5645747}
     score += run('d_tough_choices');   // {"max_score":-1,"nbooks":1.5,"ships_day":-2,"signup":-2,"_score":4815395} 
-    score += run('e_so_many_books');   // {"max_score":0.5,"nbooks":0,"ships_day":0,"signup":-1,"_score":4180700}  -> counted : 4,104,800 !!
+    score += run('e_so_many_books');   // {"max_score":0.5,"nbooks":0,"ships_day":0,"signup":-1,"_score":4180700} 
     score += run('f_libraries_of_the_world');   // {"max_score":0,"nbooks":0.5,"ships_day":0,"signup":-0.5,"_score":5288138}
-    console.log('Score total : %d', score);
+    console.log('Score total : %d', score); // 25752901
     return score;
 }
 
